@@ -1,9 +1,11 @@
 # 令和のGo
 
+片栗粉とろみ a.k.a. すしメロディ
+
 ---
 <img src='images/icon.jpg' width='25%'>
 - 名前: 片栗粉とろみ
-- twitter: [@wonderfulboy_x](https://twitter.com/wonderfulboy_x)
+- twitter: [@wonderfulboy_x](https://twitter.com/wonderfulboy_x) / [@sushi__melody](https://twitter.com/sushi__melody)
 - blog: [片栗粉とろみ](http://wonderfulboyx.hatenadiary.com/)
 - 技術スタック
   - サーバー: golang
@@ -26,9 +28,6 @@ https://blog.golang.org/go2-here-we-come
 ---
 
 ## Goのエラーハンドリングが<br>令和で変わる!!(かも)
-
-
-まだドラフトの話です
 
 ---
 
