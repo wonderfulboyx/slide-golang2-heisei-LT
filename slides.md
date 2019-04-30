@@ -174,7 +174,7 @@ func addStrAsInt(a, b string) (int, error) {
 
 ## どう動くのか
 
-末尾のerrorがnilかどうか判定してくれる
+戻り値の末尾のerrorがnilかどうか判定してくれる
 	
 - これだけで
 ```go
