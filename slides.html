@@ -23,29 +23,30 @@
 </section>
 <section>
 
-<p>golang結構好きです</p>
+<p>2019年5月1日がなんの日か知っていますか？</p>
 
 </section>
 <section>
 
-<h2>goといえば</h2>
+<p>GoチームがGo2に追加する機能について</p>
 
-<pre><code class="language-go">if err != nil {
-  
-}
-</code></pre>
+<p>最終意志決定する日です！！</p>
 
-</section>
-<section>
+<p><img src="images/final-decision.png" alt=""></p>
 
-<h2>このエラーハンドリングが<br>令和で変わる!!(かも)</h2>
-
-<p>Go2のドラフトの話です</p>
+<p><a href="https://blog.golang.org/go2-here-we-come">https://blog.golang.org/go2-here-we-come</a></p>
 
 </section>
 <section>
 
-<h2>平成のGo</h2>
+<h2>Goのエラーハンドリングが<br>令和で変わる!!(かも)</h2>
+
+<p>まだドラフトの話です</p>
+
+</section>
+<section>
+
+<h2>平成(Go1)までのエラーハンドリング</h2>
 
 </section>
 <section>
@@ -112,11 +113,9 @@
 <ul>
   <li>throw/try/catchみたいな便利なものはない
     <ul>
-      <li>じゃあどうするか
-        <ul>
-          <li>戻り値として返却して処理してもらう</li>
-        </ul>
-      </li>
+      <li>じゃあどうするか<br>
+    - エラーをreturnして処理してもらう<br>
+    - <code>err</code>が<code>nil</code>かどうかでハンドリングする</li>
     </ul>
   </li>
 </ul>
@@ -132,10 +131,15 @@ if err != nil {
 
 <h3>いいところ</h3>
 <ul>
-  <li>見たら何やってるかわかる
+  <li>可読性が高い=読めば何やってるかわかる
     <ul>
       <li>戻り値を見ればエラーの可能性がわかる</li>
-      <li>どうエラーハンドリングしてるか明確</li>
+      <li>エラーをどうハンドリングしてるか明確
+        <ul>
+          <li>どこでミスったかわかりやすい</li>
+          <li>レビューしてて読みやすい</li>
+        </ul>
+      </li>
     </ul>
   </li>
 </ul>
@@ -146,6 +150,153 @@ if err != nil {
 <h3>よくないところ</h3>
 <ul>
   <li>冗長</li>
+</ul>
+
+</section>
+<section>
+
+<h2>令和(Go2)のエラーハンドリング</h2>
+
+</section>
+<section>
+
+<p>Go2では<code>check式</code> / <code>handle構文</code> が導入されます！！(多分)</p>
+
+</section>
+<section>
+
+<p>見た目の比較</p>
+
+</section>
+<section>
+
+<p>Go1</p>
+
+<pre><code class="language-go">func addStrAsInt(a, b string) (int, error) {
+	x, err := strconv.Atoi(a)
+	if err != nil {
+		return 0, err
+	}
+	y, err := strconv.Atoi(b)
+	if err != nil {
+		return 0, err
+	}
+	return x + y, nil
+}
+</code></pre>
+
+</section>
+<section>
+
+<p>Go2</p>
+
+<pre><code class="language-go">func addStrAsInt(a, b string) (int, error) {
+	handle err { return 0, err }
+	x := check strconv.Atoi(a)
+	y := check strconv.Atoi(b)
+	return x + y, nil
+}
+</code></pre>
+
+</section>
+<section>
+
+<h2>🎉</h2>
+<p>すごい!!めちゃスッキリしてる!!</p>
+
+<pre><code class="language-go">func addStrAsInt(a, b string) (int, error) {
+	handle err { return 0, err }
+	x := check strconv.Atoi(a)
+	y := check strconv.Atoi(b)
+	return x + y, nil
+}
+</code></pre>
+
+</section>
+<section>
+
+<h2>どう動くのか</h2>
+
+<p>末尾のerrorがnilかどうか判定してくれる</p>
+
+<ul>
+  <li>これだけで
+    <pre><code class="language-go">handle err { return 0. err }
+x := check strconv.Atoi(a)
+</code></pre>
+  </li>
+  <li>以下に相当することをやってくれる
+    <pre><code class="language-go">x, err := strconv.Atoi(a)
+if err != nil {
+  return &lt;handle構文内の処理&gt;
+}
+</code></pre>
+  </li>
+</ul>
+
+</section>
+<section>
+
+<p>もしhandleが複数あったら？</p>
+
+<pre><code class="language-go">func process(user string, files chan string) (n int, err error) {
+    handle err { return 0, fmt.Errorf("process: %v", err)  }      // handler A
+    for i := 0; i &lt; 3; i++ {
+        handle err { err = fmt.Errorf("attempt %d: %v", i, err) } // handler B
+        handle err { err = moreWrapping(err) }                    // handler C
+
+        check do(something())  // check 1: C, B, A の順にhandleが評価される
+    }
+    check do(somethingElse())  // check 2: Aのhandleが評価される
+}
+</code></pre>
+
+</section>
+<section>
+
+<h2>さらに嬉しいところ</h2>
+
+<p>checkは式なので評価結果を直接関数に渡せる</p>
+
+</section>
+<section>
+
+<p>これが</p>
+<pre><code class="language-go">x, err := strconv.Atoi(a)
+if err != nil {
+	return 0, err
+}
+y, err := strconv.Atoi(b)
+if err != nil {
+	return 0, err
+}
+add(x, y) // intを2つとる関数
+
+
+// こうは書けない！！
+// add(strconv.Atoi(a), strconv.Atoi(b))
+</code></pre>
+
+</section>
+<section>
+
+<p>こうなる！</p>
+<pre><code class="language-go">handle err { return 0, err }
+add(check strconv.Atoi(a), check strconv.Atoi(b))
+</code></pre>
+
+</section>
+<section>
+
+<p>簡潔！！</p>
+
+</section>
+<section>
+
+<p>まとめ</p>
+<ul>
+  <li>礼和元年5月1日はGo2の最終意思決定の日</li>
+  <li>エラーハンドリングが簡潔になるかも！！</li>
 </ul>
 
 </section>
