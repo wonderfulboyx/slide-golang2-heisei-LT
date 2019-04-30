@@ -1,18 +1,151 @@
 <section>
 
-<h1>Goの荒れる仕様が<br>Go2で変わるかも？</h1>
+<h1>令和のGo</h1>
+
+</section>
+<section>
+
+<p><img src="images/icon.jpg" width="25%"></p>
+<ul>
+  <li>名前: 片栗粉とろみ</li>
+  <li>twitter: <a href="https://twitter.com/wonderfulboy_x">@wonderfulboy_x</a>
+</li>
+  <li>blog: <a href="http://wonderfulboyx.hatenadiary.com/">片栗粉とろみ</a>
+</li>
+  <li>技術スタック
+    <ul>
+      <li>サーバー: golang</li>
+      <li>フロント: React/Redux</li>
+    </ul>
+  </li>
+</ul>
+
+</section>
+<section>
+
+<p>golang結構好きです</p>
 
 </section>
 <section>
 
 <h2>goといえば</h2>
 
+<pre><code class="language-go">if err != nil {
+  
+}
+</code></pre>
+
 </section>
 <section>
 
-<pre><code class="language-go">if err != nil {
-  return nil
+<h2>このエラーハンドリングが<br>令和で変わる!!(かも)</h2>
+
+<p>Go2のドラフトの話です</p>
+
+</section>
+<section>
+
+<h2>平成のGo</h2>
+
+</section>
+<section>
+
+<p>2つの文字列をIntに変換して足すコード</p>
+
+<pre><code class="language-go">func addStrAsInt(a, b string) (int, error) {
+	x, _ := strconv.Atoi(a)
+	y, _ := strconv.Atoi(b)
+	return x + y, nil
 }
 </code></pre>
+
+</section>
+<section>
+
+<p>エラーハンドリングしようとすると…</p>
+
+</section>
+<section>
+
+<pre><code class="language-go">func addStrAsInt(a, b string) (int, error) {
+	x, err := strconv.Atoi(a)
+	if err != nil {
+		return 0, err
+	}
+	y, err := strconv.Atoi(b)
+	if err != nil {
+		return 0, err
+	}
+	return x + y, nil
+}
+</code></pre>
+
+</section>
+<section>
+
+<p>半分if文じゃねえか！</p>
+
+</section>
+<section>
+
+<p>いちいちif文コピペすんのかよ？</p>
+
+</section>
+<section>
+
+<p>いろいろなソリューション</p>
+
+<p><img src="images/err-switch.gif" height="450px"></p>
+
+<p><a href="https://imgur.com/gZUFqbc">https://imgur.com/gZUFqbc</a></p>
+
+</section>
+<section>
+
+<h2>なんでこうなるか</h2>
+
+</section>
+<section>
+
+<h3>Goに例外機構はない</h3>
+
+<ul>
+  <li>throw/try/catchみたいな便利なものはない
+    <ul>
+      <li>じゃあどうするか
+        <ul>
+          <li>戻り値として返却して処理してもらう</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<pre><code class="language-go">x, err := strconv.Atoi(a)
+if err != nil {
+  return err
+}
+</code></pre>
+
+</section>
+<section>
+
+<h3>いいところ</h3>
+<ul>
+  <li>見たら何やってるかわかる
+    <ul>
+      <li>戻り値を見ればエラーの可能性がわかる</li>
+      <li>どうエラーハンドリングしてるか明確</li>
+    </ul>
+  </li>
+</ul>
+
+</section>
+<section>
+
+<h3>よくないところ</h3>
+<ul>
+  <li>冗長</li>
+</ul>
 
 </section>
